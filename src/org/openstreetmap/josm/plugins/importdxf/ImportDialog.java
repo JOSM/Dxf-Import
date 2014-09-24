@@ -18,7 +18,7 @@ import org.openstreetmap.josm.tools.GBC;
 public class ImportDialog extends ExtendedDialog {
     private JFormattedTextField tsdiv = new JFormattedTextField(NumberFormat.getInstance());
     private JFormattedTextField tsnum = new JFormattedTextField(NumberFormat.getInstance());
-    private JFormattedTextField tsteps = new JFormattedTextField(NumberFormat.getIntegerInstance());
+//    private JFormattedTextField tsteps = new JFormattedTextField(NumberFormat.getIntegerInstance());
 
     public ImportDialog() {
         super(Main.parent, tr("Import dxf"),
@@ -36,14 +36,14 @@ public class ImportDialog extends ExtendedDialog {
         pscale.add(new JLabel(tr("m")),GBC.std().insets(10, 0, 0, 0));
         panel.add(pscale,GBC.eop().fill(GBC.HORIZONTAL));
         
-        final JLabel label = new JLabel("Curve steps:");
-        panel.add(label, GBC.std());
-        label.setLabelFor(tsteps);
-        panel.add(tsteps, GBC.eol().fill(GBC.HORIZONTAL));
+//        final JLabel label = new JLabel("Curve steps:");
+//        panel.add(label, GBC.std());
+//        label.setLabelFor(tsteps);
+//        panel.add(tsteps, GBC.eol().fill(GBC.HORIZONTAL));
         
         tsnum.setValue(Settings.getScaleNumerator());
         tsdiv.setValue(Settings.getScaleDivisor());
-        tsteps.setValue(Settings.getCurveSteps());
+//        tsteps.setValue(Settings.getCurveSteps());
 
         setContent(panel);
         setupDialog();
@@ -69,25 +69,25 @@ public class ImportDialog extends ExtendedDialog {
         }
     }
 
-    public int getCurveSteps() {
-        try {
-            int result = NumberFormat.getIntegerInstance().parse(tsteps.getText()).intValue();
-            if (result < 1)
-                return 1;
-            return result;
-        } catch (ParseException e) {
-            return 4;
-        }
-    }
+//    public int getCurveSteps() {
+//        try {
+//            int result = NumberFormat.getIntegerInstance().parse(tsteps.getText()).intValue();
+//            if (result < 1)
+//                return 1;
+//            return result;
+//        } catch (ParseException e) {
+//            return 4;
+//        }
+//    }
 
     
     public void saveSettings() {
         Settings.setScaleNumerator(getScaleNumerator());
         Settings.setScaleDivisor(getScaleDivisor());
-        Settings.setCurveSteps(getCurveSteps());
+//        Settings.setCurveSteps(getCurveSteps());
         System.out.println("Set_ScaleN:" + getScaleNumerator());
         System.out.println("Set_ScaleD:" + getScaleDivisor());
-        System.out.println("Set_CurveSteps:" + getCurveSteps());
+//        System.out.println("Set_CurveSteps:" + getCurveSteps());
     }
 
 }

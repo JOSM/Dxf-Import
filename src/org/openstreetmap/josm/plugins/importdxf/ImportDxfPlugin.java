@@ -13,25 +13,27 @@ import org.openstreetmap.josm.plugins.PluginInformation;
 
 public class ImportDxfPlugin extends Plugin {
 
-    public ImportDxfPlugin(PluginInformation info) {
-        super(info);
-        try {
-        	if(Files.exists(Paths.get("D:\\tempFile.txt"))){
-        		Files.delete(Paths.get("D:\\tempFile.txt"));
-        	}
-        	Files.createFile(Paths.get("D:\\tempFile.txt"));
-        	PrintStream stream = new PrintStream(new File("D:\\tempFile.txt"));
+	public ImportDxfPlugin(PluginInformation info) {
+		super(info);
+		enableLogFile();
+		ExtensionFileFilter.importers.add(new DxfImporter());
+	}
+
+	private void enableLogFile() {
+		String logFile = "D:\\logFile.txt";
+		try {
+			if (Files.exists(Paths.get(logFile))) {
+				Files.delete(Paths.get(logFile));
+			}
+			Files.createFile(Paths.get(logFile));
+			PrintStream stream = new PrintStream(new File(logFile));
 			System.setOut(stream);
 			System.setErr(stream);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-	ExtensionFileFilter.importers.add(new DxfImporter());
-    }
+	}
 
 }

@@ -25,6 +25,6 @@ public class Settings {
         return Main.pref.getDouble("importdxf_scalediv", 1);
     }
     public static double getCurveSteps() {
-        return Main.pref.getDouble("importdxf_curvesteps", 10);
+        return Main.pref.getDouble("importdxf_curvesteps", 15);
     }
 }

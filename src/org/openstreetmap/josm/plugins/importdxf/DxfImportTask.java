@@ -177,16 +177,13 @@ public class DxfImportTask extends PleaseWaitRunnable {
                 if (canceled) {
                     return;
                 }
-//                String tempFile = System.getProperty("java.io.tmpdir") + "dxfImporterTempFile.svg";
-//                String tempFile = "D:\\tempFile.svg";
-//                randomiseFile(tempFile);
                 
                 Path tempPath = Files.createTempFile("importTaskTemp", ".dxf");
                 String tempFileStr = tempPath.toString();
                 
                 processUsingKabeja(file, tempFileStr);
                 
-                SVGDiagram diagram = universe.getDiagram(Paths.get(tempFileStr).toUri()); // this is where the rest of the magic happens
+                SVGDiagram diagram = universe.getDiagram(Paths.get(tempFileStr).toUri()); // this is where the rest of the conversion happens
                 //if there's no access to the temp file, thing breaks down
                 ShapeElement root = diagram.getRoot();
                 if (root == null) {
@@ -231,7 +228,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
         KabejaObject.setPipeline("svg"); // converting to svg
         KabejaObject.omitUI(true); // we don't need no ui
         KabejaObject.initialize();
-        KabejaObject.process(); // this is where some of the magic happens
+        KabejaObject.process(); // this is where some of the conversion happens
 	}
 	
 }
