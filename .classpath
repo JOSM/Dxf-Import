@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="conf"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_67"/>
+	<classpathentry kind="lib" path="D:/Java/libraries/josm/josm-tested.jar" sourcepath="/josmApp"/>
+	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/ImportDxf/lib/batik-all.jar"/>
+	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/ImportDxf/lib/js.jar"/>
+	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/ImportDxf/lib/kabeja.jar"/>
+	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/ImportDxf/lib/kabeja-xslt.jar"/>
+	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/ImportDxf/lib/miethxml-ui.jar"/>
+	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/ImportDxf/lib/pdf-transcoder.jar"/>
+	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/ImportDxf/lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/ImportDxf/lib/xml-apis-ext.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
