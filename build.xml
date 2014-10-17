@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="DxfImport" default="dist" basedir=".">
+    <!-- enter the SVN commit message -->
+    <property name="commit.message" value="This should be the first commit, not sure yet"/>
+    <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
+    <property name="plugin.main.version" value="7001"/>
+
+    <property name="plugin.author" value="Antochi Adrian and Trifan Adrian"/>
+    <property name="plugin.class" value="org.openstreetmap.josm.plugins.dxfimport.DxfImportPlugin"/>
+    <property name="plugin.description" value="Dxf Import"/>
+    <property name="plugin.icon" value="images/dxfIcon.png"/>
+    <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/DXF_import"/>
+
+    <!-- ** include targets that all plugins have in common ** -->
+    <import file="../build-common.xml"/>
+</project>
