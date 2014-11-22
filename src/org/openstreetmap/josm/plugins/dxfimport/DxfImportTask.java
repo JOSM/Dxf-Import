@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.openstreetmap.josm.plugins.dxfimport;
 
 import com.kitfox.svg.Group;
@@ -35,8 +31,8 @@ import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.I18n;
 /**
- *
- * @author ak
+ * This class allows us to import data in josm, from a file
+ * @author adrian_antochi
  */
 public class DxfImportTask extends PleaseWaitRunnable {
     LinkedList<Node> nodes = new LinkedList<Node>();
@@ -162,12 +158,6 @@ public class DxfImportTask extends PleaseWaitRunnable {
     protected void realRun() throws IOException, OsmTransferException {
         LatLon center = Main.getProjection().eastNorth2latlon(Main.map.mapView.getCenter());
         scale = Settings.getScaleNumerator() / Settings.getScaleDivisor() / Math.cos(Math.toRadians(center.lat()));
-        
-//        System.out.println("TaskScale: " + scale);
-//        System.out.println("Get_ScaleN:" + Settings.getScaleNumerator());
-//        System.out.println("Get_ScaleD:" + Settings.getScaleDivisor());
-//        System.out.println("Get_CurveSteps:" + Settings.getCurveSteps());
-        
         this.center = projection.latlon2eastNorth(center);
         try {
             SVGUniverse universe = new SVGUniverse();
@@ -183,7 +173,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
 
                 processUsingKabeja(file, tempPath.toString());
                 
-                SVGDiagram diagram = universe.getDiagram(tempPath.toUri()); // this is where the rest of the conversion happens\
+                SVGDiagram diagram = universe.getDiagram(tempPath.toUri()); // this is where the rest of the conversion happens
                 System.out.println("diagram: \n" + diagram);
                 //if there's no access to the temp file, thing breaks down
                 ShapeElement root = diagram.getRoot();

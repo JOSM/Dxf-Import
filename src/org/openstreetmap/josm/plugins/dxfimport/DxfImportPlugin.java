@@ -16,7 +16,7 @@ public class DxfImportPlugin extends Plugin {
 	public DxfImportPlugin(PluginInformation info) {
 		super(info);
 //		enableLogFile();
-		ExtensionFileFilter.importers.add(new DxfImporter());
+		ExtensionFileFilter.importers.add(new DxfImporter()); // adding the file importer to josm file filter
 	}
 
 	private void enableLogFile() {

@@ -10,11 +10,7 @@
     <property name="plugin.description" value="Dxf Import"/>
     <property name="plugin.icon" value="images/dxfIcon.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/DXF_import"/>
-<<<<<<< HEAD
 	<property name="version.entry.commit.revision" value="1005"/>
-=======
-
->>>>>>> d7214b4e8874cbd99f800081cbb03891b6175834
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
 </project>
