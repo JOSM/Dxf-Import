@@ -1,12 +1,5 @@
 package org.openstreetmap.josm.plugins.dxfimport;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
@@ -19,7 +12,7 @@ public class DxfImportPlugin extends Plugin {
 		ExtensionFileFilter.importers.add(new DxfImporter()); // adding the file importer to josm file filter
 	}
 
-	private void enableLogFile() {
+/*	private void enableLogFile() {
 		String logFile = "D:\\logFile.txt";
 		try {
 			if (Files.exists(Paths.get(logFile))) {
@@ -34,6 +27,6 @@ public class DxfImportPlugin extends Plugin {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 
 }
