@@ -2,22 +2,9 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="conf"/>
-<<<<<<< HEAD
-=======
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
->>>>>>> d7214b4e8874cbd99f800081cbb03891b6175834
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_67"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/lib/josm-tested.jar" sourcepath="D:/Java/workspace/josmApp"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/batik-all.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/js.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/kabeja-0.4.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/kabeja-svg-0.4.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/kabeja-xslt.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/launcher.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/miethxml-toolkit.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/miethxml-ui.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/pdf-transcoder.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/xml-apis.jar"/>
-	<classpathentry kind="lib" path="D:/Java/workspace/josm/plugins/DxfImport/lib/xml-apis-ext.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+	<classpathentry kind="lib" path="lib/kabeja-0.4.jar"/>
+	<classpathentry kind="lib" path="lib/kabeja-svg-0.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
