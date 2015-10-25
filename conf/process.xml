@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <processing xmlns="http://kabeja.org/processing/1.0" xmlns:xi="http://www.w3.org/2001/XInclude">
     <!--+
-        | The processing configuration  
+        | The processing configuration
         +-->
     <configuration>
         <!--+
@@ -20,7 +20,7 @@
             <postprocessor class="org.kabeja.processing.LayerFilter" name="layer.filter"/>
             <!--  converts lines,arcs and polylines to a single polyline, if they have the same points -->
             <postprocessor class="org.kabeja.processing.PolylineConverter" name="polyline.converter"/>
-            <!-- removes invisible entities -->        
+            <!-- removes invisible entities -->
             <postprocessor class="org.kabeja.processing.VisibilityFilter" name="visibility.filter"/>
             <postprocessor class="org.kabeja.processing.ScriptablePostProcessor" name="js"/>
         </postprocessors>
@@ -89,7 +89,7 @@
     </configuration>
     
     <!--+
-        | The processing pipelines 
+        | The processing pipelines
         +-->
     <pipelines>
         <pipeline name="Inkscape" description="Converts the draft to SVG using the inkscape import filter settings.">
