@@ -6,5 +6,12 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="lib" path="lib/kabeja-0.4.jar"/>
 	<classpathentry kind="lib" path="lib/kabeja-svg-0.4.jar"/>
+	<classpathentry kind="lib" path="lib/batik-svgpp.jar"/>
+	<classpathentry kind="lib" path="lib/batik-dom.jar"/>
+	<classpathentry kind="lib" path="lib/batik-ext.jar"/>
+	<classpathentry kind="lib" path="lib/batik-parser.jar"/>
+	<classpathentry kind="lib" path="lib/batik-transcoder.jar"/>
+	<classpathentry kind="lib" path="lib/batik-util.jar"/>
+	<classpathentry kind="lib" path="lib/batik-xml.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
