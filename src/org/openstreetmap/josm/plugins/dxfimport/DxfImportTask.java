@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedList;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
