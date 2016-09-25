@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.dxfimport;
 
 import com.kitfox.svg.Group;
@@ -29,16 +30,24 @@ import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.I18n;
+
 /**
  * This class allows us to import data in josm, from a file
  * @author adrian_antochi
  */
 public class DxfImportTask extends PleaseWaitRunnable {
-    LinkedList<Node> nodes = new LinkedList<Node>();
-    LinkedList<Way> ways = new LinkedList<Way>();
-//    private List<File> files;  	old way, with multiple file conversion
+    LinkedList<Node> nodes = new LinkedList<>();
+    LinkedList<Way> ways = new LinkedList<>();
+//    private List<File> files; // old way, with multiple file conversion
     private File file;
     private boolean canceled;
+
+    Projection projection = Projections.getProjectionByCode("EPSG:3857"); // Mercator
+    EastNorth center;
+    double scale;
+    Way currentway;
+    double lastX;
+    double lastY;
 
     public DxfImportTask(File file) {
         super(I18n.tr("Importing..."), false);
@@ -53,13 +62,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
     @Override
     protected void finish() {
     }
-    Projection projection = Projections.getProjectionByCode("EPSG:3857"); // Mercator
-    EastNorth center;
-    double scale;
-    Way currentway;
-    double lastX;
-    double lastY;
-
+    
     private void appendNode(double x, double y) throws IOException {
         if (currentway == null) {
             throw new IOException("Shape is started incorectly");
@@ -86,12 +89,16 @@ public class DxfImportTask extends PleaseWaitRunnable {
         return x * x * x;
     }
 
-    private static Point2D interpolate_quad(double ax, double ay, double bx, double by, double cx, double cy, double t) {
-        return new Point2D.Double(sqr(1 - t) * ax + 2 * (1 - t) * t * bx + t * t * cx, sqr(1 - t) * ay + 2 * (1 - t) * t * by + t * t * cy);
+    private static Point2D interpolateQuad(double ax, double ay, double bx, double by, double cx, double cy, double t) {
+        return new Point2D.Double(
+                sqr(1 - t) * ax + 2 * (1 - t) * t * bx + t * t * cx, 
+                sqr(1 - t) * ay + 2 * (1 - t) * t * by + t * t * cy);
     }
 
-    private static Point2D interpolate_cubic(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy, double t) {
-        return new Point2D.Double(cube(1 - t) * ax + 3 * sqr(1 - t) * t * bx + 3 * (1 - t) * t * t * cx + t * t * t * dx, cube(1 - t) * ay + 3 * sqr(1 - t) * t * by + 3 * (1 - t) * t * t * cy + t * t * t * dy);
+    private static Point2D interpolateCubic(double ax, double ay, double bx, double by, double cx, double cy, double dx, double dy, double t) {
+        return new Point2D.Double(
+                cube(1 - t) * ax + 3 * sqr(1 - t) * t * bx + 3 * (1 - t) * t * t * cx + t * t * t * dx, 
+                cube(1 - t) * ay + 3 * sqr(1 - t) * t * by + 3 * (1 - t) * t * t * cy + t * t * t * dy);
     }
 
     private void processElement(SVGElement el, AffineTransform transform) throws IOException {
@@ -135,7 +142,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
                         double lastx = lastX;
                         double lasty = lastY;
                         for (int i = 1; i < Settings.getCurveSteps(); i++) {
-                            appendNode(interpolate_quad(lastx, lasty, coords[0], coords[1], coords[2], coords[3], i / Settings.getCurveSteps()));
+                            appendNode(interpolateQuad(lastx, lasty, coords[0], coords[1], coords[2], coords[3], i / Settings.getCurveSteps()));
                         }
                         appendNode(coords[2], coords[3]);
                         break;
@@ -143,7 +150,8 @@ public class DxfImportTask extends PleaseWaitRunnable {
                         lastx = lastX;
                         lasty = lastY;
                         for (int i = 1; i < Settings.getCurveSteps(); i++) {
-                            appendNode(interpolate_cubic(lastx, lasty, coords[0], coords[1], coords[2], coords[3], coords[4], coords[5], i / Settings.getCurveSteps()));
+                            appendNode(interpolateCubic(lastx, lasty, coords[0], coords[1], coords[2], coords[3], coords[4], coords[5], 
+                                    i / Settings.getCurveSteps()));
                         }
                         appendNode(coords[4], coords[5]);
                         break;
@@ -163,34 +171,31 @@ public class DxfImportTask extends PleaseWaitRunnable {
             universe.setVerbose(Main.pref.getBoolean("importdxf.verbose", false));
 //            for (File f : files) {
 //                if (f.isDirectory()) continue;
-                if (canceled) {
-                    return;
-                }
-//                String tempFileStr = "D:\\tempFileA2.svg";
-//                System.out.println(tempFileStr);
-                Path tempPath = Files.createTempFile("importTaskTemp", ".dxf"); // creating a temp file for generated svg
-
-                processUsingKabeja(file, tempPath.toString());
-                
-                SVGDiagram diagram = universe.getDiagram(tempPath.toUri()); // this is where the rest of the conversion happens
-                System.out.println("diagram: \n" + diagram);
-                //if there's no access to the temp file, thing breaks down
-                ShapeElement root = diagram.getRoot();
-                System.out.println("root: \n" + root);
-                if (root == null) {
-                    throw new IOException("Can't find root SVG element");
-                }
-                Rectangle2D bbox = root.getBoundingBox();
-                this.center = this.center.add(-bbox.getCenterX() * scale, bbox.getCenterY() * scale);
-                processElement(root, null);
-//                Files.delete(tempPath); // deleting temp file, leave no traces
+            if (canceled) {
+                return;
             }
-          catch (IOException e) {
+            Path tempPath = Files.createTempFile("importTaskTemp", ".dxf"); // creating a temp file for generated svg
+
+            processUsingKabeja(file, tempPath.toString());
+            
+            SVGDiagram diagram = universe.getDiagram(tempPath.toUri()); // this is where the rest of the conversion happens
+            System.out.println("diagram: \n" + diagram);
+            //if there's no access to the temp file, thing breaks down
+            ShapeElement root = diagram.getRoot();
+            System.out.println("root: \n" + root);
+            if (root == null) {
+                throw new IOException("Can't find root SVG element");
+            }
+            Rectangle2D bbox = root.getBoundingBox();
+            this.center = this.center.add(-bbox.getCenterX() * scale, bbox.getCenterY() * scale);
+            processElement(root, null);
+//                Files.delete(tempPath); // deleting temp file, leave no traces
+        } catch (IOException e) {
             throw e;
         } catch (Exception e) {
             throw new IOException(e);
         }
-        LinkedList<Command> cmds = new LinkedList<Command>();
+        LinkedList<Command> cmds = new LinkedList<>();
         for (Node n : nodes) {
             cmds.add(new AddCommand(n));
         }
@@ -200,16 +205,15 @@ public class DxfImportTask extends PleaseWaitRunnable {
         Main.main.undoRedo.add(new SequenceCommand("Import primitives", cmds));
 //    }
     }
-	
-	public static void processUsingKabeja(File file, String tempFile){
-        org.kabeja.Main KabejaObject = new org.kabeja.Main();
-        KabejaObject.setProcessConfig(DxfImportPlugin.class.getResourceAsStream("/conf/process.xml")); // process.xml is INSIDE the jar
-        KabejaObject.setSourceFile(file.getAbsolutePath());
-        KabejaObject.setDestinationFile(tempFile); // temp file, where the .svg will be stored
-        KabejaObject.setPipeline("svg"); // converting to svg
-        KabejaObject.omitUI(true); // we don't need no ui
-        KabejaObject.initialize();
-        KabejaObject.process(); // this is where some of the conversion happens
-	}
-	
+    
+    public static void processUsingKabeja(File file, String tempFile) {
+        org.kabeja.Main kabeja = new org.kabeja.Main();
+        kabeja.setProcessConfig(DxfImportPlugin.class.getResourceAsStream("/conf/process.xml")); // process.xml is INSIDE the jar
+        kabeja.setSourceFile(file.getAbsolutePath());
+        kabeja.setDestinationFile(tempFile); // temp file, where the .svg will be stored
+        kabeja.setPipeline("svg"); // converting to svg
+        kabeja.omitUI(true); // we don't need no ui
+        kabeja.initialize();
+        kabeja.process(); // this is where some of the conversion happens
+    }
 }

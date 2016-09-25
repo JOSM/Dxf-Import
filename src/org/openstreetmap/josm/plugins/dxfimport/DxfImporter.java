@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.dxfimport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -14,12 +15,12 @@ import org.openstreetmap.josm.io.FileImporter;
 import org.openstreetmap.josm.io.IllegalDataException;
 
 /**
- * 
+ * DXF file importer 
  */
 public class DxfImporter extends FileImporter {
 
     public DxfImporter() {
-        super(new ExtensionFileFilter("dxf", "dxf",tr("DXF files [ImportDxf plugin] (*.dxf)")));
+        super(new ExtensionFileFilter("dxf", "dxf", tr("DXF files [ImportDxf plugin] (*.dxf)")));
     }
 
     @Override
@@ -27,38 +28,17 @@ public class DxfImporter extends FileImporter {
         return false;
     }
     
-    //    old importData method, i've limited the loading of files to one for now, maybe later i'll implement importing multiple files.
-    // it can be done
-    
-//    @Override
-//    public void importData(List<File> files, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
-//        if (!Main.main.hasEditLayer()) {
-//            JOptionPane.showMessageDialog(Main.parent, tr("Please open or create data layer before importing"));
-//            return;
-//        }
-//        ImportDialog dlg = new ImportDialog();
-//        if (dlg.getValue() != 1) return;
-//        dlg.saveSettings();
-//        Main.worker.submit(new SvgImportTask(files));
-//    }
-    
     @Override
     public void importData(final File file, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
-        if (!Main.main.hasEditLayer()) {
-            GuiHelper.runInEDT(new Runnable() {
-                public void run() {
-                    new Notification(tr("Please open or create data layer before importing")).show();
-                }
-            });
+        if (Main.getLayerManager().getEditLayer() == null) {
+            GuiHelper.runInEDT(() -> new Notification(tr("Please open or create data layer before importing")).show());
             return;
         }
-        GuiHelper.runInEDTAndWait(new Runnable() {
-            public void run() {
-                ImportDialog dlg = new ImportDialog();
-                if (dlg.getValue() != 1) return;
-                dlg.saveSettings();
-                Main.worker.submit(new DxfImportTask(file));
-            }
+        GuiHelper.runInEDTAndWait(() -> {
+            ImportDialog dlg = new ImportDialog();
+            if (dlg.getValue() != 1) return;
+            dlg.saveSettings();
+            Main.worker.submit(new DxfImportTask(file));
         });
     }
 }

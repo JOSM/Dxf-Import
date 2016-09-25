@@ -1,3 +1,4 @@
+// License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.dxfimport;
 
 import static org.openstreetmap.josm.tools.I18n.tr;
@@ -22,19 +23,19 @@ public class ImportDialog extends ExtendedDialog {
 
     public ImportDialog() {
         super(Main.parent, tr("Import dxf"),
-                new String[] { tr("OK"), tr("Cancel") },
+                new String[] {tr("OK"), tr("Cancel")},
                 true);
         contentInsets = new Insets(15, 15, 5, 15);
-        setButtonIcons(new String[] { "ok.png", "cancel.png" });
+        setButtonIcons(new String[] {"ok.png", "cancel.png"});
         
         final JPanel panel = new JPanel(new GridBagLayout());
         panel.add(new JLabel(tr("Scale:")), GBC.eol().fill(GBC.HORIZONTAL));
         final JPanel pscale = new JPanel(new GridBagLayout());
-        pscale.add(tsdiv,GBC.std().fill(GBC.HORIZONTAL));
-        pscale.add(new JLabel(tr("unit(s) = ")),GBC.std().insets(10, 0, 0, 0));
-        pscale.add(tsnum,GBC.std().fill(GBC.HORIZONTAL));
-        pscale.add(new JLabel(tr("m")),GBC.std().insets(10, 0, 0, 0));
-        panel.add(pscale,GBC.eop().fill(GBC.HORIZONTAL));
+        pscale.add(tsdiv, GBC.std().fill(GBC.HORIZONTAL));
+        pscale.add(new JLabel(tr("unit(s) = ")), GBC.std().insets(10, 0, 0, 0));
+        pscale.add(tsnum, GBC.std().fill(GBC.HORIZONTAL));
+        pscale.add(new JLabel(tr("m")), GBC.std().insets(10, 0, 0, 0));
+        panel.add(pscale, GBC.eop().fill(GBC.HORIZONTAL));
         
 //        final JLabel label = new JLabel("Curve steps:");
 //        panel.add(label, GBC.std());
@@ -79,7 +80,6 @@ public class ImportDialog extends ExtendedDialog {
 //            return 4;
 //        }
 //    }
-
     
     public void saveSettings() {
         Settings.setScaleNumerator(getScaleNumerator());
