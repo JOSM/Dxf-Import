@@ -38,7 +38,6 @@ import org.openstreetmap.josm.tools.I18n;
 public class DxfImportTask extends PleaseWaitRunnable {
     LinkedList<Node> nodes = new LinkedList<>();
     LinkedList<Way> ways = new LinkedList<>();
-//    private List<File> files; // old way, with multiple file conversion
     private File file;
     private boolean canceled;
 
@@ -169,8 +168,6 @@ public class DxfImportTask extends PleaseWaitRunnable {
         try {
             SVGUniverse universe = new SVGUniverse();
             universe.setVerbose(Main.pref.getBoolean("importdxf.verbose", false));
-//            for (File f : files) {
-//                if (f.isDirectory()) continue;
             if (canceled) {
                 return;
             }
@@ -189,7 +186,6 @@ public class DxfImportTask extends PleaseWaitRunnable {
             Rectangle2D bbox = root.getBoundingBox();
             this.center = this.center.add(-bbox.getCenterX() * scale, bbox.getCenterY() * scale);
             processElement(root, null);
-//                Files.delete(tempPath); // deleting temp file, leave no traces
         } catch (IOException e) {
             throw e;
         } catch (Exception e) {
@@ -203,7 +199,6 @@ public class DxfImportTask extends PleaseWaitRunnable {
             cmds.add(new AddCommand(w));
         }
         Main.main.undoRedo.add(new SequenceCommand("Import primitives", cmds));
-//    }
     }
     
     public static void processUsingKabeja(File file, String tempFile) {
