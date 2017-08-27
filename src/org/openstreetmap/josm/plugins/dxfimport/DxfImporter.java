@@ -6,8 +6,8 @@ import static org.openstreetmap.josm.tools.I18n.tr;
 import java.io.File;
 import java.io.IOException;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
@@ -30,7 +30,7 @@ public class DxfImporter extends FileImporter {
     
     @Override
     public void importData(final File file, ProgressMonitor progressMonitor) throws IOException, IllegalDataException {
-        if (Main.getLayerManager().getEditLayer() == null) {
+        if (MainApplication.getLayerManager().getEditLayer() == null) {
             GuiHelper.runInEDT(() -> new Notification(tr("Please open or create data layer before importing")).show());
             return;
         }
@@ -38,7 +38,7 @@ public class DxfImporter extends FileImporter {
             ImportDialog dlg = new ImportDialog();
             if (dlg.getValue() != 1) return;
             dlg.saveSettings();
-            Main.worker.submit(new DxfImportTask(file));
+            MainApplication.worker.submit(new DxfImportTask(file));
         });
     }
 }

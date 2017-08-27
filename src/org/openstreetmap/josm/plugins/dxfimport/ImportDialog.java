@@ -16,6 +16,9 @@ import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
 import org.openstreetmap.josm.tools.GBC;
 
+/**
+ * DXF import dialog.
+ */
 public class ImportDialog extends ExtendedDialog {
     private JFormattedTextField tsdiv = new JFormattedTextField(NumberFormat.getInstance());
     private JFormattedTextField tsnum = new JFormattedTextField(NumberFormat.getInstance());

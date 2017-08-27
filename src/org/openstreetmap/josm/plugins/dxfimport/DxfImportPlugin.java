@@ -5,6 +5,9 @@ import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.plugins.Plugin;
 import org.openstreetmap.josm.plugins.PluginInformation;
 
+/**
+ * DXF import plugin.
+ */
 public class DxfImportPlugin extends Plugin {
 
     public DxfImportPlugin(PluginInformation info) {

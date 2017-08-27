@@ -3,6 +3,9 @@ package org.openstreetmap.josm.plugins.dxfimport;
 
 import org.openstreetmap.josm.Main;
 
+/**
+ * DXF import settings.
+ */
 public final class Settings {
 
     private Settings() {
