@@ -9,9 +9,9 @@ import java.io.IOException;
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.actions.ExtensionFileFilter;
 import org.openstreetmap.josm.gui.Notification;
+import org.openstreetmap.josm.gui.io.importexport.FileImporter;
 import org.openstreetmap.josm.gui.progress.ProgressMonitor;
 import org.openstreetmap.josm.gui.util.GuiHelper;
-import org.openstreetmap.josm.io.FileImporter;
 import org.openstreetmap.josm.io.IllegalDataException;
 
 /**
