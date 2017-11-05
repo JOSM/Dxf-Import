@@ -1,6 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.dxfimport;
 
+import static org.openstreetmap.josm.tools.I18n.tr;
+
 import com.kitfox.svg.Group;
 import com.kitfox.svg.SVGDiagram;
 import com.kitfox.svg.SVGElement;
@@ -17,20 +19,27 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedList;
+
+import javax.swing.JOptionPane;
+
 import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.command.AddCommand;
 import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.coor.EastNorth;
 import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
 import org.openstreetmap.josm.data.projection.Projection;
 import org.openstreetmap.josm.data.projection.Projections;
 import org.openstreetmap.josm.gui.MainApplication;
+import org.openstreetmap.josm.gui.Notification;
 import org.openstreetmap.josm.gui.PleaseWaitRunnable;
+import org.openstreetmap.josm.gui.util.GuiHelper;
 import org.openstreetmap.josm.io.OsmTransferException;
 import org.openstreetmap.josm.tools.I18n;
+import org.openstreetmap.josm.tools.Logging;
 
 /**
  * This class allows us to import data in josm, from a file
@@ -177,12 +186,19 @@ public class DxfImportTask extends PleaseWaitRunnable {
             processUsingKabeja(file, tempPath.toString());
             
             SVGDiagram diagram = universe.getDiagram(tempPath.toUri()); // this is where the rest of the conversion happens
-            System.out.println("diagram: \n" + diagram);
+            if (diagram == null) {
+                Logging.error("Unable to load SVG diagram for {0}", tempPath.toUri());
+                displayError(tr("Can't load SVG diagram"));
+                return;
+            }
+            Logging.debug("diagram: \n" + diagram);
             //if there's no access to the temp file, thing breaks down
             ShapeElement root = diagram.getRoot();
-            System.out.println("root: \n" + root);
+            Logging.debug("root: \n" + root);
             if (root == null) {
-                throw new IOException("Can't find root SVG element");
+                Logging.error("Unable to load SVG diagram for {0}", tempPath.toUri());
+                displayError(tr("Can't find root SVG element"));
+                return;
             }
             Rectangle2D bbox = root.getBoundingBox();
             this.center = this.center.add(-bbox.getCenterX() * scale, bbox.getCenterY() * scale);
@@ -192,16 +208,21 @@ public class DxfImportTask extends PleaseWaitRunnable {
         } catch (Exception e) {
             throw new IOException(e);
         }
+        DataSet ds = MainApplication.getLayerManager().getEditDataSet();
         LinkedList<Command> cmds = new LinkedList<>();
         for (Node n : nodes) {
-            cmds.add(new AddCommand(n));
+            cmds.add(new AddCommand(ds, n));
         }
         for (Way w : ways) {
-            cmds.add(new AddCommand(w));
+            cmds.add(new AddCommand(ds, w));
         }
         MainApplication.undoRedo.add(new SequenceCommand("Import primitives", cmds));
     }
     
+    private static void displayError(String error) {
+        GuiHelper.runInEDT(() -> new Notification(error).setIcon(JOptionPane.ERROR_MESSAGE).show());
+    }
+
     public static void processUsingKabeja(File file, String tempFile) {
         org.kabeja.Main kabeja = new org.kabeja.Main();
         kabeja.setProcessConfig(DxfImportPlugin.class.getResourceAsStream("/conf/process.xml")); // process.xml is INSIDE the jar
