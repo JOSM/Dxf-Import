@@ -16,9 +16,12 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JOptionPane;
 
@@ -57,6 +60,8 @@ public class DxfImportTask extends PleaseWaitRunnable {
     Way currentway;
     double lastX;
     double lastY;
+    
+    SequenceCommand resultCommand;
 
     public DxfImportTask(File file) {
         super(I18n.tr("Importing..."), false);
@@ -74,16 +79,17 @@ public class DxfImportTask extends PleaseWaitRunnable {
     
     private void appendNode(double x, double y) throws IOException {
         if (currentway == null) {
-            throw new IOException("Shape is started incorectly");
+            throw new IOException("Shape is started incorrectly");
         }
         Node nd = new Node(projection.eastNorth2latlon(center.add(x * scale, -y * scale)));
         if (nd.getCoor().isOutSideWorld()) {
-            throw new IOException("Shape goes outside the world");
+            Logging.error("Shape goes outside the world: " + nd.getCoor());
+        } else {
+            currentway.addNode(nd);
+            nodes.add(nd);
+            lastX = x;
+            lastY = y;
         }
-        currentway.addNode(nd);
-        nodes.add(nd);
-        lastX = x;
-        lastY = y;
     }
 
     private void appendNode(Point2D point) throws IOException {
@@ -191,10 +197,8 @@ public class DxfImportTask extends PleaseWaitRunnable {
                 displayError(tr("Can't load SVG diagram"));
                 return;
             }
-            Logging.debug("diagram: \n" + diagram);
             //if there's no access to the temp file, thing breaks down
             ShapeElement root = diagram.getRoot();
-            Logging.debug("root: \n" + root);
             if (root == null) {
                 Logging.error("Unable to load SVG diagram for {0}", tempPath.toUri());
                 displayError(tr("Can't find root SVG element"));
@@ -204,33 +208,48 @@ public class DxfImportTask extends PleaseWaitRunnable {
             this.center = this.center.add(-bbox.getCenterX() * scale, bbox.getCenterY() * scale);
             processElement(root, null);
         } catch (IOException e) {
+            Logging.error(e);
             throw e;
-        } catch (Exception e) {
+        } catch (Exception | LinkageError e) {
+            Logging.error(e);
             throw new IOException(e);
         }
         DataSet ds = MainApplication.getLayerManager().getEditDataSet();
-        LinkedList<Command> cmds = new LinkedList<>();
+        List<Command> cmds = new ArrayList<>();
         for (Node n : nodes) {
             cmds.add(new AddCommand(ds, n));
         }
         for (Way w : ways) {
-            cmds.add(new AddCommand(ds, w));
+            if (w.getNodesCount() > 0) {
+                cmds.add(new AddCommand(ds, w));
+            }
         }
-        MainApplication.undoRedo.add(new SequenceCommand("Import primitives", cmds));
+        if (!cmds.isEmpty()) {
+            resultCommand = new SequenceCommand("Import primitives", cmds);
+            GuiHelper.runInEDTAndWait(() -> MainApplication.undoRedo.add(resultCommand));
+        }
     }
-    
+
     private static void displayError(String error) {
         GuiHelper.runInEDT(() -> new Notification(error).setIcon(JOptionPane.ERROR_MESSAGE).show());
     }
 
-    public static void processUsingKabeja(File file, String tempFile) {
+    public static void processUsingKabeja(File file, String tempFile) throws IOException {
+        Logging.debug("Initializing Kabeja");
         org.kabeja.Main kabeja = new org.kabeja.Main();
-        kabeja.setProcessConfig(DxfImportPlugin.class.getResourceAsStream("/conf/process.xml")); // process.xml is INSIDE the jar
+        try (InputStream conf = DxfImportPlugin.class.getResourceAsStream("/resources/process.xml")) {
+            if (conf == null) {
+                throw new IOException("Cannot find configuration file!");
+            }
+            kabeja.setProcessConfig(conf);
+        }
         kabeja.setSourceFile(file.getAbsolutePath());
         kabeja.setDestinationFile(tempFile); // temp file, where the .svg will be stored
         kabeja.setPipeline("svg"); // converting to svg
         kabeja.omitUI(true); // we don't need no ui
         kabeja.initialize();
+        Logging.debug("Kabeja initialized. Processing...");
         kabeja.process(); // this is where some of the conversion happens
+        Logging.debug("Kabeja processing done");
     }
 }

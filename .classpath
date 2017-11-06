@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" path="conf"/>
+	<classpathentry excluding=".checkstyle|.classpath|.gitignore|.project|.settings/|DxfImport.jar|README.md|bin/|build.xml|build/|checkstyle-josm-DxfImport.xml|lib/|nbproject/|spotbugs-josm-DxfImport.xml|src/|test/" kind="src" path=""/>
+	<classpathentry kind="src" path="test/unit"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="lib/kabeja-0.4.jar"/>
-	<classpathentry kind="lib" path="lib/kabeja-svg-0.4.jar"/>
-	<classpathentry kind="lib" path="lib/batik-svgpp.jar"/>
-	<classpathentry kind="lib" path="lib/batik-dom.jar"/>
-	<classpathentry kind="lib" path="lib/batik-ext.jar"/>
-	<classpathentry kind="lib" path="lib/batik-parser.jar"/>
-	<classpathentry kind="lib" path="lib/batik-transcoder.jar"/>
-	<classpathentry kind="lib" path="lib/batik-util.jar"/>
-	<classpathentry kind="lib" path="lib/batik-xml.jar"/>
-	<classpathentry kind="lib" path="lib/kabeja-xslt.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JOSM-apache-commons"/>
+	<classpathentry kind="lib" path="lib/batik-dom-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/batik-ext-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/batik-parser-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/batik-svgpp-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/batik-transcoder-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/batik-util-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/batik-xml-1.9.1.jar"/>
+	<classpathentry kind="lib" path="lib/kabeja-0.5.0.jar" sourcepath="/kabeja"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
