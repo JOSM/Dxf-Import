@@ -60,7 +60,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
     Way currentway;
     double lastX;
     double lastY;
-    
+
     SequenceCommand resultCommand;
 
     public DxfImportTask(File file) {
@@ -76,10 +76,10 @@ public class DxfImportTask extends PleaseWaitRunnable {
     @Override
     protected void finish() {
     }
-    
+
     private void appendNode(double x, double y) throws IOException {
         if (currentway == null) {
-            throw new IOException("Shape is started incorrectly");
+            throw new IOException(tr("Shape is started incorrectly"));
         }
         Node nd = new Node(projection.eastNorth2latlon(center.add(x * scale, -y * scale)));
         if (nd.getCoor().isOutSideWorld()) {
@@ -190,18 +190,18 @@ public class DxfImportTask extends PleaseWaitRunnable {
             Path tempPath = Files.createTempFile("importTaskTemp", ".dxf"); // creating a temp file for generated svg
 
             processUsingKabeja(file, tempPath.toString());
-            
+
             SVGDiagram diagram = universe.getDiagram(tempPath.toUri()); // this is where the rest of the conversion happens
             if (diagram == null) {
                 Logging.error("Unable to load SVG diagram for {0}", tempPath.toUri());
-                displayError(tr("Can't load SVG diagram"));
+                displayError(tr("Can''t load SVG diagram"));
                 return;
             }
             //if there's no access to the temp file, thing breaks down
             ShapeElement root = diagram.getRoot();
             if (root == null) {
                 Logging.error("Unable to load SVG diagram for {0}", tempPath.toUri());
-                displayError(tr("Can't find root SVG element"));
+                displayError(tr("Can''t find root SVG element"));
                 return;
             }
             Rectangle2D bbox = root.getBoundingBox();
@@ -225,7 +225,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
             }
         }
         if (!cmds.isEmpty()) {
-            resultCommand = new SequenceCommand("Import primitives", cmds);
+            resultCommand = new SequenceCommand(tr("Import primitives"), cmds);
             GuiHelper.runInEDTAndWait(() -> MainApplication.undoRedo.add(resultCommand));
         }
     }
@@ -239,7 +239,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
         org.kabeja.Main kabeja = new org.kabeja.Main();
         try (InputStream conf = DxfImportPlugin.class.getResourceAsStream("/resources/process.xml")) {
             if (conf == null) {
-                throw new IOException("Cannot find configuration file!");
+                throw new IOException(tr("Cannot find configuration file!"));
             }
             kabeja.setProcessConfig(conf);
         }
