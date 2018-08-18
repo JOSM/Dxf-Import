@@ -2,7 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry excluding=".checkstyle|.classpath|.gitignore|.project|.settings/|DxfImport.jar|README.md|bin/|build.xml|build/|checkstyle-josm-DxfImport.xml|lib/|nbproject/|spotbugs-josm-DxfImport.xml|src/|test/" kind="src" path=""/>
-	<classpathentry kind="src" path="test/unit"/>
+	<classpathentry kind="src" output="bintest" path="test/unit">
+		<attributes>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/JOSM"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>

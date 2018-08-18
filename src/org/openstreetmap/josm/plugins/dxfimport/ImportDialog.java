@@ -12,8 +12,8 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.openstreetmap.josm.Main;
 import org.openstreetmap.josm.gui.ExtendedDialog;
+import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.tools.GBC;
 
 /**
@@ -24,7 +24,7 @@ public class ImportDialog extends ExtendedDialog {
     private JFormattedTextField tsnum = new JFormattedTextField(NumberFormat.getInstance());
 
     public ImportDialog() {
-        super(Main.parent, tr("Import dxf"),
+        super(MainApplication.getMainFrame(), tr("Import dxf"),
                 new String[] {tr("OK"), tr("Cancel")},
                 true);
         contentInsets = new Insets(15, 15, 5, 15);
