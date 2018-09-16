@@ -11,7 +11,12 @@
     <property name="plugin.icon" value="images/dxfIcon.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/DXF_import"/>
     <property name="plugin.requires" value="apache-commons"/>
-    <property name="version.entry.commit.revision" value="1012"/>
+    <property name="version.entry.commit.revision" value="1013"/>
+    <target name="additional-manifest">
+        <manifest file="MANIFEST" mode="update">
+            <attribute name="12671_Plugin-Url" value="1012;https://github.com/JOSM/Dxf-Import/releases/download/v1012/DxfImport.jar" />
+        </manifest>
+    </target>
     <!-- ** include targets that all plugins have in common ** -->
     <import file="../build-common.xml"/>
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
