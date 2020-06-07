@@ -84,7 +84,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
             throw new IOException(tr("Shape is started incorrectly"));
         }
         Node nd = new Node(projection.eastNorth2latlon(center.add(x * scale, -y * scale)));
-        if (nd.getCoor().isOutSideWorld()) {
+        if (nd.isOutSideWorld()) {
             Logging.error("Shape goes outside the world: " + nd.getCoor());
         } else {
             currentway.addNode(nd);
