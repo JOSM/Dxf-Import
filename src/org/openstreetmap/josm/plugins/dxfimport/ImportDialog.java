@@ -28,8 +28,8 @@ public class ImportDialog extends ExtendedDialog {
                 new String[] {tr("OK"), tr("Cancel")},
                 true);
         contentInsets = new Insets(15, 15, 5, 15);
-        setButtonIcons(new String[] {"ok.png", "cancel.png"});
-        
+        setButtonIcons(new String[] {"ok", "cancel"});
+
         final JPanel panel = new JPanel(new GridBagLayout());
         panel.add(new JLabel(tr("Scale:")), GBC.eol().fill(GBC.HORIZONTAL));
         final JPanel pscale = new JPanel(new GridBagLayout());
@@ -38,7 +38,7 @@ public class ImportDialog extends ExtendedDialog {
         pscale.add(tsnum, GBC.std().fill(GBC.HORIZONTAL));
         pscale.add(new JLabel(tr("m")), GBC.std().insets(10, 0, 0, 0));
         panel.add(pscale, GBC.eop().fill(GBC.HORIZONTAL));
-        
+
         tsnum.setValue(Settings.getScaleNumerator());
         tsdiv.setValue(Settings.getScaleDivisor());
 
@@ -46,7 +46,7 @@ public class ImportDialog extends ExtendedDialog {
         setupDialog();
         setVisible(true);
     }
-    
+
     public double getScaleNumerator() {
         try {
             return NumberFormat.getInstance().parse(tsnum.getText()).doubleValue();
@@ -54,7 +54,7 @@ public class ImportDialog extends ExtendedDialog {
             return 1;
         }
     }
-    
+
     public double getScaleDivisor() {
         try {
             double result = NumberFormat.getInstance().parse(tsdiv.getText()).doubleValue();
