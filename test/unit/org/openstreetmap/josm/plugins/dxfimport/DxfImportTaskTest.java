@@ -1,8 +1,8 @@
 // License: GPL. For details, see LICENSE file.
 package org.openstreetmap.josm.plugins.dxfimport;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,30 +19,30 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.openstreetmap.josm.TestUtils;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.gui.MainApplication;
 import org.openstreetmap.josm.gui.layer.OsmDataLayer;
-import org.openstreetmap.josm.testutils.JOSMTestRules;
+import org.openstreetmap.josm.testutils.annotations.BasicPreferences;
+import org.openstreetmap.josm.testutils.annotations.Main;
+import org.openstreetmap.josm.testutils.annotations.Projection;
 import org.openstreetmap.josm.tools.Logging;
 
 /**
  * Unit tests of {@link DxfImportTask} class.
  */
+@BasicPreferences
+@Projection
+@Main
+@Timeout(value = 2, unit = TimeUnit.MINUTES)
 public class DxfImportTaskTest {
-
-    /**
-     * Setup test.
-     */
-    @Rule
-    public JOSMTestRules rules = new JOSMTestRules().main().preferences().projection().timeout(120000);
 
     /**
      * Lists all datasets files matching given extension.
      * @param ext file extension to search for
-     * @returns List of all datasets files matching given extension
+     * @return List of all datasets files matching given extension
      * @throws IOException in case of I/O error
      */
     public static Collection<Path> listDataFiles(String ext) throws IOException {
@@ -66,7 +66,7 @@ public class DxfImportTaskTest {
     }
 
     @Test
-    public void testDxfImportTask() throws Exception {
+    void testDxfImportTask() throws Exception {
         OsmDataLayer layer = new OsmDataLayer(new DataSet(), "", null);
         MainApplication.getLayerManager().addLayer(layer);
         try {
