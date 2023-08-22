@@ -24,7 +24,7 @@ import org.openstreetmap.josm.command.Command;
 import org.openstreetmap.josm.command.SequenceCommand;
 import org.openstreetmap.josm.data.UndoRedoHandler;
 import org.openstreetmap.josm.data.coor.EastNorth;
-import org.openstreetmap.josm.data.coor.LatLon;
+import org.openstreetmap.josm.data.coor.ILatLon;
 import org.openstreetmap.josm.data.osm.DataSet;
 import org.openstreetmap.josm.data.osm.Node;
 import org.openstreetmap.josm.data.osm.Way;
@@ -53,7 +53,7 @@ import com.kitfox.svg.ShapeElement;
 public class DxfImportTask extends PleaseWaitRunnable {
     LinkedList<Node> nodes = new LinkedList<>();
     LinkedList<Way> ways = new LinkedList<>();
-    private File file;
+    private final File file;
     private boolean canceled;
 
     Projection projection = Projections.getProjectionByCode("EPSG:3857"); // Mercator
@@ -128,8 +128,8 @@ public class DxfImportTask extends PleaseWaitRunnable {
                 transform = new AffineTransform(transform);
                 transform.concatenate(xform);
             }
-            for (Object child : ((Group) el).getChildren(null)) {
-                processElement((SVGElement) child, transform);
+            for (SVGElement child : el.getChildren(null)) {
+                processElement(child, transform);
             }
             transform = oldTransform;
         } else if (el instanceof ShapeElement) {
@@ -150,7 +150,7 @@ public class DxfImportTask extends PleaseWaitRunnable {
                         appendNode(coords[0], coords[1]);
                         break;
                     case PathIterator.SEG_CLOSE:
-                        if (currentway.firstNode().getCoor().equalsEpsilon(nodes.getLast().getCoor())) {
+                        if (currentway.firstNode().equalsEpsilon(nodes.getLast())) {
                             currentway.removeNode(nodes.removeLast());
                         }
                         currentway.addNode(currentway.firstNode());
@@ -180,9 +180,9 @@ public class DxfImportTask extends PleaseWaitRunnable {
 
     @Override
     protected void realRun() throws IOException, OsmTransferException {
-        LatLon center = ProjectionRegistry.getProjection().eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
-        scale = Settings.getScaleNumerator() / Settings.getScaleDivisor() / Math.cos(Math.toRadians(center.lat()));
-        this.center = projection.latlon2eastNorth(center);
+        ILatLon currentCenter = ProjectionRegistry.getProjection().eastNorth2latlon(MainApplication.getMap().mapView.getCenter());
+        scale = Settings.getScaleNumerator() / Settings.getScaleDivisor() / Math.cos(Math.toRadians(currentCenter.lat()));
+        this.center = projection.latlon2eastNorth(currentCenter);
         try {
             SVGUniverse universe = new SVGUniverse();
             universe.setVerbose(Config.getPref().getBoolean("importdxf.verbose", false));
