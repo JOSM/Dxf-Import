@@ -17,6 +17,7 @@ permissions:
   attestations: write
   contents: write
   packages: write
+  checks: write
 
 jobs:
   check-release-needed:
