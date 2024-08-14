@@ -3,7 +3,8 @@
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="This should be the first commit, not sure yet"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
-    <property name="plugin.main.version" value="18464"/>
+    <property name="plugin.main.version" value="19044"/>
+    <property name="java.lang.version" value="11" />
 
     <property name="plugin.author" value="Antochi Adrian and Trifan Adrian"/>
     <property name="plugin.class" value="org.openstreetmap.josm.plugins.dxfimport.DxfImportPlugin"/>
@@ -11,7 +12,6 @@
     <property name="plugin.icon" value="images/dxfIcon.png"/>
     <property name="plugin.link" value="https://wiki.openstreetmap.org/wiki/JOSM/Plugins/DXF_import"/>
     <property name="plugin.requires" value="apache-commons"/>
-    <property name="version.entry.commit.revision" value="1014"/>
     <target name="additional-manifest">
         <manifest file="MANIFEST" mode="update">
             <attribute name="12671_Plugin-Url" value="1012;https://github.com/JOSM/Dxf-Import/releases/download/v1012/DxfImport.jar" />
