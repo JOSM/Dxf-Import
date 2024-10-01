@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="DxfImport" default="dist" basedir=".">
+<project name="DxfImport" default="dist" basedir="." xmlns:mvn="antlib:org.apache.maven.resolver.ant">
     <!-- enter the SVN commit message -->
     <property name="commit.message" value="This should be the first commit, not sure yet"/>
     <!-- enter the *lowest* JOSM version this plugin is currently compatible with -->
@@ -23,4 +23,57 @@
     <fileset id="plugin.requires.jars" dir="${plugin.dist.dir}">
         <include name="apache-commons.jar"/>
     </fileset>
+    <!-- This stanza is necessary since the maven resolver doesn't read repo settings from the pom.xml file -->
+    <!-- resolver.repositories makes it global -->
+    <target name="fetch-dependencies-maven" depends="is-maven,init-maven,clean_ivy">
+        <mvn:pom file="pom.xml"/>
+        <mvn:pom file="pom.xml" id="pom"/>
+        <!-- This stanza is necessary since the maven resolver doesn't read repo settings from the pom.xml file -->
+        <!-- resolver.repositories makes it global -->
+        <mvn:remoterepos id="resolver.repositories">
+            <mvn:remoterepo id="JOSM" url="https://josm.openstreetmap.de/nexus/content/repositories/public/" />
+            <mvn:remoterepo id="JOSM-snapshots" url="https://josm.openstreetmap.de/nexus/content/repositories/snapshots/" snapshots="true" />
+            <mvn:remoterepo id="josm-github-kabeja" url="https://github.com/JOSM/kabeja/raw/maven/" />
+        </mvn:remoterepos>
+        <mkdir dir="${plugin.lib.dir}"/>
+        <mvn:resolve>
+            <!-- For some reason, compile time josm-unittest dependencies get included -->
+            <mvn:dependencies pomRef="pom">
+                <mvn:exclusion groupId="org.openstreetmap.josm" artifactId="josm-unittest"/>
+                <mvn:exclusion groupId="org.junit.platform"/>
+                <mvn:exclusion groupId="org.junit.vintage"/>
+                <mvn:exclusion groupId="org.junit.jupiter"/>
+            </mvn:dependencies>
+            <mvn:files refid="lib.files" dir="${plugin.lib.dir}" layout="{artifactId}-{version}-{classifier}.{extension}" scopes="compile,!test"/>
+        </mvn:resolve>
+        <mvn:resolve>
+            <mvn:path refid="classpath.provided" scopes="provided"/>
+        </mvn:resolve>
+        <mvn:resolve>
+            <mvn:path refid="testlib.classpath" classpath="test"/>
+        </mvn:resolve>
+        <mvn:resolve>
+            <mvn:dependencies>
+                <mvn:dependency groupId="org.jacoco" artifactId="org.jacoco.ant" version="${pom.properties.jacoco.version}" classifier="nodeps" type="jar" scope="test"/>
+            </mvn:dependencies>
+            <mvn:path refid="jacocotest.classpath" classpath="test"/>
+        </mvn:resolve>
+        <mvn:resolve>
+            <mvn:dependencies>
+                <mvn:dependency groupId="com.puppycrawl.tools" artifactId="checkstyle" version="${pom.properties.checkstyle.version}" scope="compile"/>
+            </mvn:dependencies>
+            <mvn:path refid="checkstyle.classpath" classpath="compile"/>
+        </mvn:resolve>
+        <mvn:resolve>
+            <mvn:dependencies>
+                <mvn:dependency groupId="com.github.spotbugs" artifactId="spotbugs" version="${pom.properties.spotbugs.version}" scope="compile"/>
+                <mvn:dependency groupId="com.github.spotbugs" artifactId="spotbugs-ant" version="${pom.properties.spotbugs.version}" scope="compile"/>
+            </mvn:dependencies>
+            <mvn:path refid="spotbugs.classpath" classpath="compile"/>
+        </mvn:resolve>
+        <path id="plugin.classpath.actual">
+            <path refid="plugin.classpath"/>
+            <path refid="classpath.provided"/>
+        </path>
+    </target>
 </project>
