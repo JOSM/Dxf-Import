@@ -55,4 +55,9 @@ jobs:
       revision-offset: 948
       plugin-jar-name: DxfImport
     secrets: inherit
-
+    permissions:
+      attestations: write
+      checks: write
+      contents: write
+      deployments: write
+      id-token: write
