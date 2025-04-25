@@ -33,8 +33,8 @@
         <!-- This stanza is necessary since the maven resolver doesn't read repo settings from the pom.xml file -->
         <!-- resolver.repositories makes it global -->
         <mvn:remoterepos id="resolver.repositories">
-            <mvn:remoterepo id="JOSM" url="https://josm.openstreetmap.de/nexus/content/repositories/public/"/>
-            <mvn:remoterepo id="JOSM-snapshots" url="https://josm.openstreetmap.de/nexus/content/repositories/snapshots/" snapshots="true"/>
+            <mvn:remoterepo id="JOSM" url="https://josm.openstreetmap.de/repository/public/"/>
+            <mvn:remoterepo id="JOSM-snapshots" url="https://josm.openstreetmap.de/repository/snapshots/" snapshots="true"/>
             <mvn:remoterepo id="josm-github-kabeja" url="https://github.com/JOSM/kabeja/raw/maven/"/>
         </mvn:remoterepos>
         <mkdir dir="${plugin.lib.dir}"/>
